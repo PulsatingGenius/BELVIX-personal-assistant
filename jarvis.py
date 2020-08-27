@@ -8,6 +8,11 @@ import os
 import smtplib
 import re
 import requests
+import random
+import string
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import subprocess
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -137,7 +142,102 @@ def main():
          speak(date)
          speak(month)
          speak(year)
+    
+    elif "who are you" in query.lower() or 'where are you' in query.lower() or 'what are you' in query.lower():
+        setReplies = [' I am BELVIX' + 'In your system'+'I am an example of AI']
+        speak(setReplies)
+    elif 'hello' in query.lower() or 'hey' in query.lower():
+        speak('hey')
+    elif 'bye' in query.lower():
+       speak("bye have a better day ahead")
+
+    elif 'create a password' in query.lower() or 'give me a password' in query.lower():
+        sep = ""
+        random.choice(string.ascii_letters)
+        password = []
+        let1 = random.randint(1,9)
+        let2 = random.randint(1,9)
+        let3 = random.choice(string.ascii_letters)
+        let4 = random.randint(1,9)
+        let5 = random.choice(string.ascii_letters)
+        let6 = random.choice(string.ascii_letters)
+        let7 = random.randint(1,9)
+        let8 = random.choice(string.ascii_letters)
+        let9 = random.randint(1,9)
+        let10 = random.randint(1,9)
+        let11 = random.choice(string.ascii_letters)
+        let12 = random.randint(1,9)
+        let13 = random.choice(string.ascii_letters)
+        let14 = random.choice(string.ascii_letters)
+        let15 = random.randint(1,9)
+        let16 = random.choice(string.ascii_letters)
+        print(let1,let2,let3,let4,let5,let6,let7,let8,let9,let10,let11,let12,let13,let14,let15,let16, sep="")
+    
+    
+    elif 'play music' in query.lower():
+        reg_ex = re.search('play (.+)', query)
+        if reg_ex:
+            searchedSong = reg_ex.group(1)
+            url = 'https://www.youtube.com/results?q=' + searchedSong
+            try:
+                source_code = requests.get(url, headers=headers, timeout=15)
+                plain_text = source_code.text
+                soup = BeautifulSoup(plain_text, "html.parser")
+                songs = soup.findAll('div', {'class': 'yt-lockup-video'})
+                song = songs[0].contents[0].contents[0].contents[0]
+                hit = song['href']
+                webbrowser.open('https://www.youtube.com' + hit)
+                speak('Playing ' + searchedSong + ' on Youtube.')
+            except Exception as e:
+                webbrowser.open(url)
+                speak('Searching for ' + searchedSong + ' on Youtube.')   
+    
+
+    elif 'joke' in query.lower(): 
+        res = requests.get( 'https://icanhazdadjoke.com/', headers={"Accept":"application/json"} )
+        
+        if res.status_code == requests.codes.ok: 
+           speak(str(res.json()['joke'])) 
+        else: 
+            speak('oops!I ran out of jokes')
+
+    elif 'news' in query.lower():
+        try:
+            news_url = "https://news.google.com/news/rss"
+            Client = urlopen(news_url)
+            xml_page = Client.read()
+            Client.close()
+            soup_page = BeautifulSoup(xml_page, "html.parser")
+            news_list = soup_page.findAll("item")
+            for news in news_list[:5]:
+                speak(news.title.text)
+        except Exception as e:
+            print(e)
+    
+    
+    elif 'tell me about' in query.lower():
+        reg_ex = re.search('tell me about (.*)', query)
+        try:
+            if reg_ex:
+                topic = reg_ex.group(1)
+                print(wikipedia.summary(topic, sentences=3))
+                speak(wikipedia.summary(topic, sentences=3))
+        except Exception as e:
+            speak(e)
+
+    
+    elif 'search' in query.lower():
+        reg_ex = re.search('search (.+)', query)
+        if reg_ex:
+            subject = reg_ex.group(1)
+            url = 'https://www.google.com/search?q=' + subject
+            webbrowser.open(url)
+            speak('Searching for ' + subject + ' on Google.')
+    
+    
+    
 
 
 while True:
-    main()
+     main()
+    
