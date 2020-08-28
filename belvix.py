@@ -13,6 +13,7 @@ import string
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import subprocess
+import json 
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -80,7 +81,7 @@ def send_mail(to, content):
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.ehlo()
         server.starttls()
-        server.login('email', 'pass')
+        server.login('email', 'password')
         server.send_mail(to, content)
         server.close()
 
@@ -235,9 +236,33 @@ def main():
             speak('Searching for ' + subject + ' on Google.')
     
     
-    
+    elif 'current weather' in query.lower():
+          api_key = "api key"
+          base_url = "http://api.openweathermap.org/data/2.5/weather?"
+          speak("which city sir")
+          city_name = takecommand()
+          complete_url = base_url + "q=" + city_name + "&appid="+ api_key
+          response = requests.get(complete_url)
+          x = response.json() 
+          if x["cod"] != "404": 
+                y = x["main"]
+                current_temperature = y["temp"] 
+                current_pressure = y["pressure"]
+                current_humidiy = y["humidity"]
+                z = x["weather"] 
+                weather_description = z[0]["description"]
+                speak(" Temperature (in kelvin unit) = " +
+                            str(current_temperature) + 
+                   "\n atmospheric pressure (in hPa unit) = " +
+                            str(current_pressure) +
+                   "\n humidity (in percentage) = " +
+                            str(current_humidiy) +
+                    "\n description = " +
+                            str(weather_description))      
+          else:
+                speak(" City Not Found ")
 
-
+             
 while True:
      main()
     
