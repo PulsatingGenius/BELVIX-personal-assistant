@@ -1,0 +1,20 @@
+from __future__ import print_function
+import os.path
+
+import pyttsx3
+import datetime
+import pyaudio
+import speech_recognition as sr
+import wikipedia
+import webbrowser
+import os
+import smtplib
+import re
+import requests
+import random
+import string
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import subprocess
+import json
+
