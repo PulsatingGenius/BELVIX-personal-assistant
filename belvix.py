@@ -319,13 +319,7 @@ def main():
     elif 'thank you' in query.lower():
         speak("your welcome")
 
-    elif 'help me with recpies' in query.lower():
-        url = 'https://rothko.app/'
-        chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
-        webbrowser.get(chrome_path).open(url)
-		
-
-
+   
 while True:
     main()
 
