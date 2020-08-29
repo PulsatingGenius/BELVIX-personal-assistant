@@ -164,10 +164,12 @@ def main():
         speak(year)
 
     elif "who are you" in query.lower() or 'where are you' in query.lower() or 'what are you' in query.lower():
-        setReplies = [' I am BELVIX' + 'In your system' + 'I am an example of AI']
+        setReplies = [' I am ' + "belvix" + 'In your system' + 'I am an example of AI']
         speak(setReplies)
+
     elif 'hello' in query.lower() or 'hey' in query.lower():
         speak('hey')
+
     elif 'bye' in query.lower():
         speak("bye have a better day ahead")
 
@@ -193,7 +195,6 @@ def main():
         let16 = random.choice(string.ascii_letters)
         print(let1, let2, let3, let4, let5, let6, let7, let8, let9, let10, let11, let12, let13, let14, let15, let16,
               sep="")
-
 
     elif 'play music' in query.lower():
         reg_ex = re.search('play (.+)', query)
@@ -236,6 +237,7 @@ def main():
             print(e)
 
 
+
     elif 'tell me about' in query.lower():
         reg_ex = re.search('tell me about (.*)', query)
         try:
@@ -247,6 +249,7 @@ def main():
             speak(e)
 
 
+
     elif 'search' in query.lower():
         reg_ex = re.search('search (.+)', query)
         if reg_ex:
@@ -254,6 +257,7 @@ def main():
             url = 'https://www.google.com/search?q=' + subject
             webbrowser.open(url)
             speak('Searching for ' + subject + ' on Google.')
+
 
 
     elif 'current weather' in query.lower():
@@ -282,11 +286,44 @@ def main():
         else:
             speak(" City Not Found ")
     elif 'make a note' in query.lower():
-         
+
         speak("What would you like me to write down?")
         note_text = takecommand()
         note(note_text)
         speak("I've made a note of that.")
+
+
+    elif 'videos about' in query.lower():
+        reg_ex = re.search('videos (.+)', query)
+        if reg_ex:
+            videosAbout = reg_ex.group(1)
+            url = 'https://www.youtube.com/results?q=' + videosAbout
+            try:
+                source_code = requests.get(url, headers=headers, timeout=15)
+                plain_text = source_code.text
+                soup = BeautifulSoup(plain_text, "html.parser")
+                songs = soup.findAll('div', {'class': 'yt-lockup-video'})
+                song = songs[0].contents[0].contents[0].contents[0]
+                hit = song['href']
+                webbrowser.open('https://www.youtube.com' + hit)
+                speak('Playing ' + videosAbout + ' on Youtube.')
+            except Exception as e:
+                webbrowser.open(url)
+                speak('Searching for ' + videosAbout + ' on Youtube.')
+
+    elif 'astronomical events' in query.lower():
+        url = 'http://www.seasky.org/astronomy/astronomy-calendar-current.html'
+        chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+        webbrowser.get(chrome_path).open(url)
+
+    elif 'thank you' in query.lower():
+        speak("your welcome")
+
+    elif 'help me with recpies' in query.lower():
+        url = 'https://rothko.app/'
+        chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+        webbrowser.get(chrome_path).open(url)
+		
 
 
 while True:
