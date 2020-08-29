@@ -1,3 +1,6 @@
+from __future__ import print_function
+import os.path
+
 import pyttsx3
 import datetime
 import pyaudio
@@ -13,77 +16,93 @@ import string
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import subprocess
-import json 
+import json
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 # print(voices[1].id)
 engine.setProperty('voice', voices[0].id)
+
+
 def speak(audio):
-      engine.say(audio)
-      engine.runAndWait()
+    engine.say(audio)
+    engine.runAndWait()
+
 
 def time():
-        strTime = datetime.datetime.now().strftime("%H:%M:%S")
-        speak("sir the current time is " + strTime)
+    strTime = datetime.datetime.now().strftime("%H:%M:%S")
+    speak("sir the current time is " + strTime)
+
 
 def date():
-        year = int(datetime.datetime.now().year)
-        month = int(datetime.datetime.now().month)
-        date = int(datetime.datetime.now().day)
-        speak(date)
-        speak(month)
-        speak(year)
+    year = int(datetime.datetime.now().year)
+    month = int(datetime.datetime.now().month)
+    date = int(datetime.datetime.now().day)
+    speak(date)
+    speak(month)
+    speak(year)
+
 
 def wishme():
-        hour = int(datetime.datetime.now().hour)
-        if hour >= 0 and hour < 12:
-            speak("good morning ")
-            speak("welcome back sir")
-            time()
-            speak("today the date is")
-            date()
+    hour = int(datetime.datetime.now().hour)
+    if hour >= 0 and hour < 12:
+        speak("good morning ")
+        speak("welcome back sir")
+        time()
+        speak("today the date is")
+        date()
 
-        elif hour >= 12 and hour < 18:
-            speak("good afternoon ,aman")
-            speak("welcome back sir")
-            time()
-            speak("today the date is")
-            date()
-        else:
-            speak("good evening ,aman , how was your day?")
-            speak("welcome back sir")
-            time()
-            speak("today the date is")
-            date()
+    elif hour >= 12 and hour < 18:
+        speak("good afternoon ,aman")
+        speak("welcome back sir")
+        time()
+        speak("today the date is")
+        date()
+    else:
+        speak("good evening ,aman , how was your day?")
+        speak("welcome back sir")
+        time()
+        speak("today the date is")
+        date()
+
 
 def takecommand():
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            print("listening....,,.")
-            r.pause_threshold = 1
-            audio = r.listen(source)
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("listening....,,.")
+        r.pause_threshold = 1
+        audio = r.listen(source)
 
-        try:
-            print("Recognizing..,,.")
-            query = r.recognize_google(audio, language='en-in')
-            print("user said:", query)
+    try:
+        print("Recognizing..,,.")
+        query = r.recognize_google(audio, language='en-in')
+        print("user said:", query)
 
-        except Exception as e:
-            print(e)
+    except Exception as e:
+        print(e)
 
-            print("say that again ,please")
-            return "none"
+        print("say that again ,please")
+        return "none"
 
-        return query
+    return query
+
 
 def send_mail(to, content):
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.ehlo()
-        server.starttls()
-        server.login('email', 'password')
-        server.send_mail(to, content)
-        server.close()
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login('email', 'password')
+    server.send_mail(to, content)
+    server.close()
+
+
+def note(text):
+    date = datetime.datetime.now()
+    file_name = str(date).replace(":", "-") + "-note.txt"
+    with open(file_name, "w") as f:
+        f.write(text)
+
+    subprocess.Popen(["notepad.exe", file_name])
 
 
 wishme()
@@ -106,11 +125,11 @@ def main():
         webbrowser.get(chrome_path).open(url)
 
     elif 'open youtube' in query.lower():
-    
+
         url = 'youtube.com'
         chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
         webbrowser.get(chrome_path).open(url)
-    
+
     elif 'open facebook' in query.lower():
         url = 'facebook.com'
         chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
@@ -130,51 +149,52 @@ def main():
         os.startfile(code_path)
 
     elif 'send a mail' in query.lower():
-       speak("to whom ")
-       to = takecommand()
-       speak("what should i sent")
-       content = takecommand()
-       send_mail(to, content)
+        speak("to whom ")
+        to = takecommand()
+        speak("what should i sent")
+        content = takecommand()
+        send_mail(to, content)
 
     elif 'what is the date' in query.lower():
-         year = int(datetime.datetime.now().year)
-         month = int(datetime.datetime.now().month)
-         date = int(datetime.datetime.now().day)
-         speak(date)
-         speak(month)
-         speak(year)
-    
+        year = int(datetime.datetime.now().year)
+        month = int(datetime.datetime.now().month)
+        date = int(datetime.datetime.now().day)
+        speak(date)
+        speak(month)
+        speak(year)
+
     elif "who are you" in query.lower() or 'where are you' in query.lower() or 'what are you' in query.lower():
-        setReplies = [' I am BELVIX' + 'In your system'+'I am an example of AI']
+        setReplies = [' I am BELVIX' + 'In your system' + 'I am an example of AI']
         speak(setReplies)
     elif 'hello' in query.lower() or 'hey' in query.lower():
         speak('hey')
     elif 'bye' in query.lower():
-       speak("bye have a better day ahead")
+        speak("bye have a better day ahead")
 
     elif 'create a password' in query.lower() or 'give me a password' in query.lower():
         sep = ""
         random.choice(string.ascii_letters)
         password = []
-        let1 = random.randint(1,9)
-        let2 = random.randint(1,9)
+        let1 = random.randint(1, 9)
+        let2 = random.randint(1, 9)
         let3 = random.choice(string.ascii_letters)
-        let4 = random.randint(1,9)
+        let4 = random.randint(1, 9)
         let5 = random.choice(string.ascii_letters)
         let6 = random.choice(string.ascii_letters)
-        let7 = random.randint(1,9)
+        let7 = random.randint(1, 9)
         let8 = random.choice(string.ascii_letters)
-        let9 = random.randint(1,9)
-        let10 = random.randint(1,9)
+        let9 = random.randint(1, 9)
+        let10 = random.randint(1, 9)
         let11 = random.choice(string.ascii_letters)
-        let12 = random.randint(1,9)
+        let12 = random.randint(1, 9)
         let13 = random.choice(string.ascii_letters)
         let14 = random.choice(string.ascii_letters)
-        let15 = random.randint(1,9)
+        let15 = random.randint(1, 9)
         let16 = random.choice(string.ascii_letters)
-        print(let1,let2,let3,let4,let5,let6,let7,let8,let9,let10,let11,let12,let13,let14,let15,let16, sep="")
-    
-    
+        print(let1, let2, let3, let4, let5, let6, let7, let8, let9, let10, let11, let12, let13, let14, let15, let16,
+              sep="")
+
+
     elif 'play music' in query.lower():
         reg_ex = re.search('play (.+)', query)
         if reg_ex:
@@ -191,15 +211,15 @@ def main():
                 speak('Playing ' + searchedSong + ' on Youtube.')
             except Exception as e:
                 webbrowser.open(url)
-                speak('Searching for ' + searchedSong + ' on Youtube.')   
-    
+                speak('Searching for ' + searchedSong + ' on Youtube.')
 
-    elif 'joke' in query.lower(): 
-        res = requests.get( 'https://icanhazdadjoke.com/', headers={"Accept":"application/json"} )
-        
-        if res.status_code == requests.codes.ok: 
-           speak(str(res.json()['joke'])) 
-        else: 
+
+    elif 'joke' in query.lower():
+        res = requests.get('https://icanhazdadjoke.com/', headers={"Accept": "application/json"})
+
+        if res.status_code == requests.codes.ok:
+            speak(str(res.json()['joke']))
+        else:
             speak('oops!I ran out of jokes')
 
     elif 'news' in query.lower():
@@ -214,8 +234,8 @@ def main():
                 speak(news.title.text)
         except Exception as e:
             print(e)
-    
-    
+
+
     elif 'tell me about' in query.lower():
         reg_ex = re.search('tell me about (.*)', query)
         try:
@@ -226,7 +246,7 @@ def main():
         except Exception as e:
             speak(e)
 
-    
+
     elif 'search' in query.lower():
         reg_ex = re.search('search (.+)', query)
         if reg_ex:
@@ -234,35 +254,41 @@ def main():
             url = 'https://www.google.com/search?q=' + subject
             webbrowser.open(url)
             speak('Searching for ' + subject + ' on Google.')
-    
-    
-    elif 'current weather' in query.lower():
-          api_key = "api key"
-          base_url = "http://api.openweathermap.org/data/2.5/weather?"
-          speak("which city sir")
-          city_name = takecommand()
-          complete_url = base_url + "q=" + city_name + "&appid="+ api_key
-          response = requests.get(complete_url)
-          x = response.json() 
-          if x["cod"] != "404": 
-                y = x["main"]
-                current_temperature = y["temp"] 
-                current_pressure = y["pressure"]
-                current_humidiy = y["humidity"]
-                z = x["weather"] 
-                weather_description = z[0]["description"]
-                speak(" Temperature (in kelvin unit) = " +
-                            str(current_temperature) + 
-                   "\n atmospheric pressure (in hPa unit) = " +
-                            str(current_pressure) +
-                   "\n humidity (in percentage) = " +
-                            str(current_humidiy) +
-                    "\n description = " +
-                            str(weather_description))      
-          else:
-                speak(" City Not Found ")
 
-             
+
+    elif 'current weather' in query.lower():
+        api_key = "api key"
+        base_url = "http://api.openweathermap.org/data/2.5/weather?"
+        speak("which city sir")
+        city_name = takecommand()
+        complete_url = base_url + "q=" + city_name + "&appid=" + api_key
+        response = requests.get(complete_url)
+        x = response.json()
+        if x["cod"] != "404":
+            y = x["main"]
+            current_temperature = y["temp"]
+            current_pressure = y["pressure"]
+            current_humidiy = y["humidity"]
+            z = x["weather"]
+            weather_description = z[0]["description"]
+            speak(" Temperature (in kelvin unit) = " +
+                  str(current_temperature) +
+                  "\n atmospheric pressure (in hPa unit) = " +
+                  str(current_pressure) +
+                  "\n humidity (in percentage) = " +
+                  str(current_humidiy) +
+                  "\n description = " +
+                  str(weather_description))
+        else:
+            speak(" City Not Found ")
+    elif 'make a note' in query.lower():
+         
+        speak("What would you like me to write down?")
+        note_text = takecommand()
+        note(note_text)
+        speak("I've made a note of that.")
+
+
 while True:
-     main()
-    
+    main()
+
