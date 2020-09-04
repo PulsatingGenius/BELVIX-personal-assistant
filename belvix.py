@@ -319,7 +319,17 @@ def main():
     elif 'thank you' in query.lower():
         speak("your welcome")
 
-   
+    elif 'weather in' in query.lower():
+        reg_ex = re.search('weather in (.+)', query)
+        if reg_ex:
+            subject = reg_ex.group(1)
+            url = 'https://www.google.com/search?q=' + subject
+            r = requests.get(url)
+            s = BeautifulSoup(r.text,"html.praser")
+            update = s.find("div",class_="BNeawe").text
+            speak(update)
+            print(update)
+
 while True:
     main()
 
